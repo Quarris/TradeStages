@@ -1,16 +1,18 @@
 package dev.quarris.tradestages.mixins.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.quarris.tradestages.ModRoot;
 import dev.quarris.tradestages.helper.StageHelper;
 import dev.quarris.tradestages.mixins.client.accessors.IMerchantScreenAccessor;
 import dev.quarris.tradestages.trades.IStagedOffer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.MerchantScreen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.client.gui.screen.inventory.MerchantScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.MerchantOffer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,9 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@Mixin(MerchantScreen.TradeOfferButton.class)
+@Mixin(MerchantScreen.TradeButton.class)
 public abstract class TradeOfferButtonMixin extends Button {
 
     @Shadow
@@ -33,18 +34,20 @@ public abstract class TradeOfferButtonMixin extends Button {
     @Final
     private int index;
 
-    public TradeOfferButtonMixin(int p_93721_, int p_93722_, int p_93723_, int p_93724_, Component p_93725_, OnPress p_93726_) {
+    public TradeOfferButtonMixin(int p_93721_, int p_93722_, int p_93723_, int p_93724_, ITextComponent p_93725_, IPressable p_93726_) {
         super(p_93721_, p_93722_, p_93723_, p_93724_, p_93725_, p_93726_);
     }
 
     @Inject(method = "renderToolTip", at = @At("TAIL"))
-    public void renderInvalidStageTooltip(PoseStack matrix, int mouseX, int mouseY, CallbackInfo ci) {
+    public void renderInvalidStageTooltip(MatrixStack matrix, int mouseX, int mouseY, CallbackInfo ci) {
         IMerchantScreenAccessor accessor = (IMerchantScreenAccessor) this$0;
         MerchantOffer offer = this.this$0.getMenu().getOffers().get(this.index + accessor.getScrollOff());
 
-        if (!(offer instanceof IStagedOffer stagedOffer)) {
+        if (!(offer instanceof IStagedOffer)) {
             return;
         }
+
+        IStagedOffer stagedOffer = (IStagedOffer) offer;
 
         if (StageHelper.canTrade(Minecraft.getInstance().player, offer)) {
             return;
@@ -56,16 +59,16 @@ public abstract class TradeOfferButtonMixin extends Button {
 
             if (mouseOverX > 53 && mouseOverX < 66 && mouseOverY > 2 && mouseOverY < 14) {
                 List<String> stages = ModRoot.stagedTrades.getStages(stagedOffer.getTradeLevel(), stagedOffer.getProfessionId());
-                List<Component> stagesTooltip = new ArrayList<>();
-                stagesTooltip.add(Component.translatable("merchant.invalid_stage"));
+                List<ITextComponent> stagesTooltip = new ArrayList<>();
+                stagesTooltip.add(new TranslationTextComponent("merchant.invalid_stage"));
                 stages.forEach(stage -> {
                     if (I18n.exists("stage." + stage)) {
-                        stagesTooltip.add(Component.translatable("stage." + stage));
+                        stagesTooltip.add(new TranslationTextComponent("stage." + stage));
                     } else {
-                        stagesTooltip.add(Component.literal(stage));
+                        stagesTooltip.add(new StringTextComponent(stage));
                     }
                 });
-                this$0.renderTooltip(matrix, stagesTooltip, Optional.empty(), mouseX, mouseY);
+                this$0.renderComponentTooltip(matrix, stagesTooltip, mouseX, mouseY);
             }
         }
     }

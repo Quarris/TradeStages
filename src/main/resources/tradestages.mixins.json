@@ -4,12 +4,11 @@
     "compatibilityLevel": "JAVA_8",
     "package": "dev.quarris.tradestages.mixins",
     "mixins": [
-        "AbstractVillagerMixin",
-        "MerchantContainerMixin",
+        "AbstractVillagerEntityMixin",
+        "MerchantInventoryMixin",
         "MerchantOfferMixin",
         "MerchantOffersMixin",
-        "VillagerMixin",
-        "WanderingTraderMixin"
+        "WanderingTraderEntityMixin"
     ],
     "client": [
         "client.MerchantScreenMixin",

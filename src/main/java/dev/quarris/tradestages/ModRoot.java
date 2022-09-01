@@ -1,8 +1,7 @@
 package dev.quarris.tradestages;
 
 import com.google.gson.JsonObject;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.util.JSONUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -13,19 +12,17 @@ import java.io.IOException;
 @Mod(ModRef.ID)
 public class ModRoot {
 
-    public static AbstractVillager lastInteractedVillager;
     public static StagedTradeData stagedTrades;
 
     public ModRoot() {
         loadTradeData();
-        System.out.println(stagedTrades);
     }
 
     public static void loadTradeData() {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(FMLPaths.CONFIGDIR.get().resolve("tradestages.json").toFile()));
-            JsonObject configJson = GsonHelper.parse(reader);
+            JsonObject configJson = JSONUtils.parse(reader);
             if (!configJson.has("trades") || !configJson.get("trades").isJsonObject()) {
                 ModRef.LOGGER.warn("Config file must contain 'trades' as Json Object");
                 stagedTrades = new StagedTradeData();

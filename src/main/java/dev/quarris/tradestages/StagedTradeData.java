@@ -6,9 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.quarris.tradestages.trades.IStagedOffer;
 import net.darkhax.gamestages.GameStageHelper;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.MerchantOffer;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,12 @@ public class StagedTradeData {
         return stagedTrades.get(tradeLevel, profession);
     }
 
-    public boolean canTrade(Player player, MerchantOffer offer) {
-        if (!(offer instanceof IStagedOffer stagedOffer)) {
+    public boolean canTrade(PlayerEntity player, MerchantOffer offer) {
+        if (!(offer instanceof IStagedOffer)) {
             return true;
         }
+
+        IStagedOffer stagedOffer = (IStagedOffer) offer;
 
         List<String> stages = this.stagedTrades.get(stagedOffer.getTradeLevel(), stagedOffer.getProfessionId());
         if (stages == null || stages.isEmpty()) {
