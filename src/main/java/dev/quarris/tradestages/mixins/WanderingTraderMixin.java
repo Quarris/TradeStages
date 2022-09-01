@@ -27,11 +27,6 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
         super(p_35267_, p_35268_);
     }
 
-    @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/npc/WanderingTrader;openTradingScreen(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/network/chat/Component;I)V"))
-    public void cacheVillagerInfo(Player p_35856_, InteractionHand p_35857_, CallbackInfoReturnable<InteractionResult> cir) {
-        //ModRoot.lastInteractedVillager = this;
-    }
-
     @Inject(method = "updateTrades", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/trading/MerchantOffers;add(Ljava/lang/Object;)Z"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     public void addTradeLevelToRareOffer(CallbackInfo ci, VillagerTrades.ItemListing[] avillagertrades$itemlisting, VillagerTrades.ItemListing[] avillagertrades$itemlisting1, MerchantOffers merchantoffers, int i, VillagerTrades.ItemListing villagertrades$itemlisting, MerchantOffer merchantoffer) {
         if (merchantoffer instanceof IStagedOffer tradeLevelOffer) {
