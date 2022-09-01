@@ -8,7 +8,6 @@
         "MerchantContainerMixin",
         "MerchantOfferMixin",
         "MerchantOffersMixin",
-        "VillagerMixin",
         "WanderingTraderMixin"
     ],
     "client": [
