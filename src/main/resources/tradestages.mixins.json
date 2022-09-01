@@ -1,0 +1,23 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_8",
+    "package": "dev.quarris.tradestages.mixins",
+    "mixins": [
+        "AbstractVillagerMixin",
+        "MerchantContainerMixin",
+        "MerchantOfferMixin",
+        "MerchantOffersMixin",
+        "VillagerMixin",
+        "WanderingTraderMixin"
+    ],
+    "client": [
+        "client.MerchantScreenMixin",
+        "client.TradeOfferButtonMixin",
+        "client.accessors.IMerchantScreenAccessor"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "refmap": "tradestages.refmap.json"
+}
