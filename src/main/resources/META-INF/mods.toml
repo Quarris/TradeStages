@@ -45,3 +45,11 @@ Lock trade using GameStages based on the career progression of the villager.
     versionRange="[1.16.5,1.17)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.tradestages]]
+    modId="gamestages"
+    mandatory=true
+    # This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[7.3,)"
+    ordering="NONE"
+    side="BOTH"
