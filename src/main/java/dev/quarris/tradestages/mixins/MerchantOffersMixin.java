@@ -15,16 +15,16 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(MerchantOffers.class)
 public class MerchantOffersMixin {
 
-    @Inject(method = "lambda$writeToStream$0", at = @At("TAIL"))
-    private static void writeTradeLevelToStream(FriendlyByteBuf buf, MerchantOffer offer, CallbackInfo ci) {
+    @Inject(method = "writeToStream", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/item/trading/MerchantOffer;getDemand()I", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    public void writeTradeLevelToStream(FriendlyByteBuf buf, CallbackInfo ci, int i, MerchantOffer offer, ItemStack unused) {
         if (offer instanceof IStagedOffer stagedOffer) {
             buf.writeVarInt(stagedOffer.getTradeLevel());
             buf.writeResourceLocation(stagedOffer.getProfessionId());
         }
     }
 
-    @Inject(method = "lambda$createFromStream$1", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private static void writeTradeLevelToStream(FriendlyByteBuf buf, CallbackInfoReturnable<MerchantOffer> cir, ItemStack $$1, ItemStack $$2, ItemStack $$3, boolean $$4, int $$5, int $$6, int $$7, int $$8, float $$9, int $$10, MerchantOffer offer) {
+    @Inject(method = "createFromStream", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/item/trading/MerchantOffers;add(Ljava/lang/Object;)Z", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private static void writeTradeLevelToStream(FriendlyByteBuf buf, CallbackInfoReturnable<MerchantOffers> cir, MerchantOffers merchantoffers, int i, int j, ItemStack itemstack, ItemStack itemstack1, ItemStack itemstack2, boolean flag, int k, int l, int i1, int j1, float f, int k1, MerchantOffer offer) {
         if (offer instanceof IStagedOffer stagedOffer) {
             stagedOffer.setTradeLevel(buf.readVarInt());
             stagedOffer.setProfessionId(buf.readResourceLocation());

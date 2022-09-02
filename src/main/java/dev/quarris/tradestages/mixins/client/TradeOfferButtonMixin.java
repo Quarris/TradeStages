@@ -10,6 +10,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.trading.MerchantOffer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -57,12 +59,12 @@ public abstract class TradeOfferButtonMixin extends Button {
             if (mouseOverX > 53 && mouseOverX < 66 && mouseOverY > 2 && mouseOverY < 14) {
                 List<String> stages = ModRoot.stagedTrades.getStages(stagedOffer.getTradeLevel(), stagedOffer.getProfessionId());
                 List<Component> stagesTooltip = new ArrayList<>();
-                stagesTooltip.add(Component.translatable("merchant.invalid_stage"));
+                stagesTooltip.add(new TranslatableComponent("merchant.invalid_stage"));
                 stages.forEach(stage -> {
                     if (I18n.exists("stage." + stage)) {
-                        stagesTooltip.add(Component.translatable("stage." + stage));
+                        stagesTooltip.add(new TranslatableComponent("stage." + stage));
                     } else {
-                        stagesTooltip.add(Component.literal(stage));
+                        stagesTooltip.add(new TextComponent(stage));
                     }
                 });
                 this$0.renderTooltip(matrix, stagesTooltip, Optional.empty(), mouseX, mouseY);
