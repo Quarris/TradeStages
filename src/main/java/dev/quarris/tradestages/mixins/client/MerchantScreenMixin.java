@@ -12,6 +12,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MerchantMenu;
@@ -56,7 +58,7 @@ public abstract class MerchantScreenMixin extends AbstractContainerScreen<Mercha
     public void renderInvalidTradeTexts(PoseStack matrix, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         int left = this.getGuiLeft();
         int top = this.getGuiTop();
-        Component invalidStageText = Component.translatable("merchant.invalid_stage");
+        Component invalidStageText = new TranslatableComponent("merchant.invalid_stage");
         int textWidth = this.font.width(invalidStageText);
 
         if (!this.validShopItem || this.shopItem < 0 || this.shopItem > this.menu.getOffers().size()) {
@@ -82,9 +84,9 @@ public abstract class MerchantScreenMixin extends AbstractContainerScreen<Mercha
 
         List<Component> tooltip = ModRoot.stagedTrades.getStages(stagedOffer.getTradeLevel(), stagedOffer.getProfessionId()).stream().map(stage -> {
             if (I18n.exists("stage." + stage)) {
-                return Component.translatable("stage." + stage);
+                return new TranslatableComponent("stage." + stage);
             } else {
-                return Component.literal(stage);
+                return new TextComponent(stage);
             }
         }).collect(Collectors.toList());
         this.renderTooltip(matrix, tooltip, Optional.empty(), mouseX, mouseY);

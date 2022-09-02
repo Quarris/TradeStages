@@ -32,7 +32,7 @@ public class AbstractVillagerMixin {
 
         if ((Object) this instanceof Villager villager) {
             tradeLevelOffer.setTradeLevel(villager.getVillagerData().getLevel());
-            tradeLevelOffer.setProfessionId(ForgeRegistries.VILLAGER_PROFESSIONS.getKey(villager.getVillagerData().getProfession()));
+            tradeLevelOffer.setProfessionId(ForgeRegistries.PROFESSIONS.getKey(villager.getVillagerData().getProfession()));
         }
 
         if ((Object) this instanceof WanderingTrader) {
