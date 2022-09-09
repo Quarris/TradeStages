@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.quarris.tradestages.trades.IStagedOffer;
 import net.darkhax.gamestages.GameStageHelper;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StagedTradeData {
 
@@ -71,6 +73,38 @@ public class StagedTradeData {
         }
 
         return data;
+    }
+
+    public CompoundTag serialize() {
+        CompoundTag tag = new CompoundTag();
+        ListTag tableNbt = new ListTag();
+        for (int tradeLevel : this.stagedTrades.rowKeySet()) {
+            for (ResourceLocation profession : this.stagedTrades.columnKeySet()) {
+                ListTag stagesList = new ListTag();
+                this.stagedTrades.get(tradeLevel, profession).forEach(stage -> stagesList.add(StringTag.valueOf(stage)));
+
+                CompoundTag tradeNbt = new CompoundTag();
+                tradeNbt.putInt("TradeLevel", tradeLevel);
+                tradeNbt.putString("Profession", profession.toString());
+                tradeNbt.put("Stages", stagesList);
+                tableNbt.add(tradeNbt);
+            }
+        }
+        tag.put("Table", tableNbt);
+
+        return tag;
+    }
+
+    public void deserialize(CompoundTag tag) {
+        this.stagedTrades.clear();
+        ListTag tableNbt = tag.getList("Table", CompoundTag.TAG_COMPOUND);
+        for (Tag baseTag : tableNbt) {
+            CompoundTag tradeNbt = (CompoundTag) baseTag;
+            int tradeLevel = tradeNbt.getInt("TradeLevel");
+            ResourceLocation profession = new ResourceLocation(tradeNbt.getString("Profession"));
+            List<String> stages = tradeNbt.getList("Stages", CompoundTag.TAG_STRING).stream().map(Tag::getAsString).toList();
+            this.stagedTrades.put(tradeLevel, profession, stages);
+        }
     }
 
     @Override

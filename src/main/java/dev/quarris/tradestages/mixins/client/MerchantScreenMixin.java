@@ -43,6 +43,13 @@ public abstract class MerchantScreenMixin extends AbstractContainerScreen<Mercha
         super(menu, inv, title);
     }
 
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/MerchantMenu;getOffers()Lnet/minecraft/world/item/trading/MerchantOffers;", shift = At.Shift.BY, by = 2), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    public void removeInvalidTrades(PoseStack matrix, int mouseX, int mouseY, float delta, CallbackInfo ci, MerchantOffers offers) {
+        if (ModRoot.hideLockedTrades) {
+            offers.removeIf(offer -> !StageHelper.canTrade(Minecraft.getInstance().player, offer));
+        }
+    }
+
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/MerchantScreen;renderButtonArrows(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/trading/MerchantOffer;II)V", shift = At.Shift.BY, by = 3), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     public void renderInvalidStageIcon(PoseStack matrix, int mouseX, int mouseY, float delta, CallbackInfo ci, MerchantOffers merchantoffers, int i, int j, int entryY, int entryX, int i1, Iterator<?> var11, MerchantOffer merchantOffer) {
         if (StageHelper.canTrade(Minecraft.getInstance().player, merchantOffer)) {
